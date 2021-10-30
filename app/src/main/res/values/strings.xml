@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Book App Project</string>
+    <string name="new_user_signup">New User ? <b>SignUp</b></string>
 </resources>
