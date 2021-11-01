@@ -34,6 +34,14 @@ public class CategoryAddActivity extends AppCompatActivity {
         progressDialog.setTitle("please Wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
+        binding.backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+
+            }
+        });
+
         binding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +72,7 @@ public class CategoryAddActivity extends AppCompatActivity {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("id", "" + timestamp);
         hashMap.put("category", "" + category);
-        hashMap.put("timestamp", "" + category);
+        hashMap.put("timestamp",timestamp);
         hashMap.put("uid", "" + firebaseAuth.getUid());
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Categories");
