@@ -16,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookappproject.databinding.RowCategoryBinding;
-import com.example.bookappproject.model.FilterCategory;
-import com.example.bookappproject.model.ModelCategory;
+import com.example.bookappproject.models.FilterCategory;
+import com.example.bookappproject.models.ModelCategory;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;

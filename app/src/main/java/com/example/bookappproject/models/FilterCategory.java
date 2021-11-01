@@ -1,4 +1,4 @@
-package com.example.bookappproject.model;
+package com.example.bookappproject.models;
 
 import android.widget.Filter;
 

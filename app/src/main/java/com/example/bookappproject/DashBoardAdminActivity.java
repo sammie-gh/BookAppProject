@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bookappproject.adapters.AdapterCategory;
 import com.example.bookappproject.databinding.ActivityDashBoardAdminBinding;
-import com.example.bookappproject.model.ModelCategory;
+import com.example.bookappproject.models.ModelCategory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -75,6 +75,13 @@ public class DashBoardAdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(DashBoardAdminActivity.this, CategoryAddActivity.class));
+            }
+        });
+
+        binding.addPdfFab.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashBoardAdminActivity.this, PdfAddActivity.class));
             }
         });
     }
