@@ -1,20 +1,23 @@
-package com.example.bookappproject.models;
+package com.example.bookappproject.filters;
 
 import android.widget.Filter;
 
 import com.example.bookappproject.adapters.AdapterCategory;
+import com.example.bookappproject.adapters.AdapterPdfAdmin;
+import com.example.bookappproject.models.ModelCategory;
+import com.example.bookappproject.models.ModelPdf;
 
 import java.util.ArrayList;
 
-public class FilterCategory extends Filter {
+public class FilterPdfAdmin extends Filter {
     //arraylist in which we want to search
-    ArrayList<ModelCategory> filterList;
+    ArrayList<ModelPdf> filterList;
     //adapter in which filter need to be implemented
-    AdapterCategory adapterCategory;
+    AdapterPdfAdmin adapterPdfAdmin;
 
-    public FilterCategory(ArrayList<ModelCategory> filterList, AdapterCategory adapterCategory) {
+    public FilterPdfAdmin(ArrayList<ModelPdf> filterList, AdapterPdfAdmin adapterPdfAdmin) {
         this.filterList = filterList;
-        this.adapterCategory = adapterCategory;
+        this.adapterPdfAdmin = adapterPdfAdmin;
     }
 
     @Override
@@ -25,12 +28,12 @@ public class FilterCategory extends Filter {
         if (constraint != null && constraint.length() > 0) {
             //change to upper case or lower case too avaoid case sens.
             constraint = constraint.toString().toUpperCase();
-            ArrayList<ModelCategory> filterModels = new ArrayList<>();
+            ArrayList<ModelPdf> filterModels = new ArrayList<>();
             for (int i = 0; i < filterList.size(); i++) {
 
-                if (filterList.get(i).getCategory().toUpperCase().contains(constraint)){
+                if (filterList.get(i).getTitle().toUpperCase().contains(constraint)) {
                     // add filter to list
-                   filterModels.add(filterList.get(i));
+                    filterModels.add(filterList.get(i));
 
                 }
 
@@ -39,9 +42,9 @@ public class FilterCategory extends Filter {
             results.values = filterModels;
 
 
-        }else {
+        } else {
             results.count = filterList.size();
-            results.values  = filterList;
+            results.values = filterList;
         }
 
 
@@ -51,10 +54,10 @@ public class FilterCategory extends Filter {
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
         //apply filter
-        adapterCategory.categoryArrayList =  (ArrayList<ModelCategory>)results.values;
+        adapterPdfAdmin.pdfArrayList = (ArrayList<ModelPdf>) results.values;
 
         //notify changes
-        adapterCategory.notifyDataSetChanged();
+        adapterPdfAdmin .notifyDataSetChanged();
 
 
     }
