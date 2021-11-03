@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         String userType = ""+snapshot.child("userType").getValue();
                         if (userType.equals("user")){
-                            startActivity(new Intent(LoginActivity.this, DashBoardActivity.class));
+                            startActivity(new Intent(LoginActivity.this, DashBoardUserActivity.class));
                             finish();
                         }else if(userType.equals("admin")){
                             startActivity(new Intent(LoginActivity.this, DashBoardAdminActivity.class));

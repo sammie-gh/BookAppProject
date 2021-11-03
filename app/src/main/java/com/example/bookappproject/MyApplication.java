@@ -5,6 +5,7 @@ import static com.example.bookappproject.Common.MAX_BYTES_PDF;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Environment;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -29,11 +30,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
 public class MyApplication extends Application {
+    private static final String TAG = "TAG_DOWNLOAD";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -216,13 +221,122 @@ public class MyApplication extends Application {
                         }
 
                         // increment views count
-                        long newViewsCount = Long.parseLong(viewsCount)+ 1;
+                        long newViewsCount = Long.parseLong(viewsCount) + 1;
                         HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put("viewsCount", newViewsCount);
 
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Books");
                         reference.child(bookId)
                                 .updateChildren(hashMap);
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+    }
+
+    public static void downloadBook(Context context, String bookId, String bookTitle, String bookUrl) {
+        Log.d(TAG, "downloadBook: downloading book");
+
+        String nameWithExtension = bookTitle + ".pdf";
+
+        //progress dialog
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Downloading... " + nameWithExtension + "...");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(bookUrl);
+        storageReference.getBytes(MAX_BYTES_PDF)
+                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Log.d(TAG, "onSuccess: Book download");
+                        Log.d(TAG, "onSuccess: Saving Book");
+
+                        saveDownloadedBook(context, progressDialog, bytes, nameWithExtension, bookId);
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(context, " failed to download" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onFailure: failed to download " + e.getMessage());
+            }
+        });
+
+    }
+
+    private static void saveDownloadedBook(Context context, ProgressDialog progressDialog, byte[] bytes, String nameWithExtension, String bookId) {
+        Log.d(TAG, "saveDownloadedBook: saving downloaded book ");
+        try {
+            File downloadFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            downloadFolder.mkdir();
+
+            String filepath = downloadFolder.getPath() + "/" + nameWithExtension;
+
+            FileOutputStream out = new FileOutputStream(filepath);
+            out.write(bytes);
+            out.close();
+
+            Toast.makeText(context, "Saved to Download Folder", Toast.LENGTH_LONG).show();
+            Log.d(TAG, "saveDownloadedBook: Saved to Download Folder");
+            progressDialog.dismiss();
+
+            incrementBookDownloadCount(bookId);
+
+        } catch (Exception e) {
+            progressDialog.dismiss();
+            Toast.makeText(context, "Failed saving to download folder due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private static void incrementBookDownloadCount(String bookId) {
+        Log.d(TAG, "incrementBookDownloadCount: increase book download count  ");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Books");
+
+        databaseReference.child(bookId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String downloadCount = "" + snapshot.child("downloadsCount").getValue();
+                        Log.d(TAG, "onDataChange: download count :" + downloadCount);
+
+                        if (downloadCount.equals("") || downloadCount.equals("null")) {
+                            downloadCount = "0";
+
+                        }
+                        //convert to long
+                        long newDownloadCounts = Long.parseLong(downloadCount) + 1;
+
+                        //setup data to update
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("downloadsCount", newDownloadCounts);
+
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Books");
+                        reference.child(bookId).updateChildren(hashMap)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Log.d(TAG, "onSuccess: Download count updated");
+
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "onFailure: failed to update download count " + e.getMessage());
+                            }
+                        });
 
 
                     }

@@ -1,11 +1,18 @@
 package com.example.bookappproject;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.bookappproject.databinding.ActivityPdfDetailBinding;
 import com.google.firebase.database.DataSnapshot;
@@ -16,8 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class PdfDetailActivity extends AppCompatActivity {
 
+    private static final String TAG_DOWNLOAD = "DOWNLOAD_TAG";
     private ActivityPdfDetailBinding binding;
-    String bookId;
+    String bookId, bookTitle, bookUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +35,9 @@ public class PdfDetailActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         bookId = i.getStringExtra("bookId");
+
+        binding.downloadBookBtn.setVisibility(View.GONE);
+
         loadBookDetails();
 
         //increment view count whenever this page is starts or open
@@ -38,7 +49,46 @@ public class PdfDetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        binding.readBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(PdfDetailActivity.this, PdfViewActivity.class);
+                intent1.putExtra("bookId", bookId);
+                startActivity(intent1);
+            }
+        });
+
+        binding.downloadBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG_DOWNLOAD, "onClick: checking permission");
+                if (ContextCompat.checkSelfPermission(PdfDetailActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG_DOWNLOAD, "onClick: permission already granted ");
+                    MyApplication.downloadBook(PdfDetailActivity.this, "" + bookId, "" + bookTitle, "" + bookUrl);
+
+                } else {
+                    Log.d(TAG_DOWNLOAD, "onClick: permission was not granted request permission...");
+                    requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }
+
+            }
+        });
+
     }
+
+    //request storage permission
+    private ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+
+        if (isGranted) {
+            Log.d(TAG_DOWNLOAD, "Permission Granted");
+            MyApplication.downloadBook(this, "" + bookId, "" + bookTitle, "" + bookUrl);
+        } else {
+            Log.d(TAG_DOWNLOAD, ": Permission was denied ... ");
+            Toast.makeText(this, "Permission was granted", Toast.LENGTH_SHORT).show();
+        }
+    });
 
     private void loadBookDetails() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");
@@ -47,13 +97,17 @@ public class PdfDetailActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String title = "" + snapshot.child("title").getValue();
+                        bookTitle = "" + snapshot.child("title").getValue();
                         String description = "" + snapshot.child("description").getValue();
                         String categoryId = "" + snapshot.child("categoryId").getValue();
                         String viewsCount = "" + snapshot.child("viewsCount").getValue();
                         String downloadsCount = "" + snapshot.child("downloadsCount").getValue();
-                        String url = "" + snapshot.child("url").getValue();
+                        bookUrl = "" + snapshot.child("url").getValue();
                         String timestamp = "" + snapshot.child("timestamp").getValue();
+
+                        //required data is loaded show download button
+                        binding.downloadBookBtn.setVisibility(View.VISIBLE);
+
 
                         //format date
                         String date = MyApplication.formartTimestamp(Long.parseLong(timestamp));
@@ -64,24 +118,24 @@ public class PdfDetailActivity extends AppCompatActivity {
                         );
 
                         MyApplication.loadPdfFromUrlSinglePage(
-                                "" + url,
-                                "" + title,
+                                "" + bookUrl,
+                                "" + bookTitle,
                                 binding.pdfView,
                                 binding.progressBar
                         );
 
                         MyApplication.loadPdfSize(
-                                "" + url,
-                                "" + title,
+                                "" + bookUrl,
+                                "" + bookTitle,
                                 binding.sizeTv
                         );
 
                         //set data
-                        binding.titleTv.setText(title);
+                        binding.titleTv.setText(bookTitle);
                         binding.descriptionTV.setText(description);
-                        binding.viewTv.setText(viewsCount.replace("null","N/A"));
+                        binding.viewTv.setText(viewsCount.replace("null", "N/A"));
 //                        binding.downloadTv.setText(viewsCount.replace("null","N/A"));
-                        binding.dateTv.setText (date);
+                        binding.dateTv.setText(date);
 
 
                     }

@@ -123,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, "Account created", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegisterActivity.this, DashBoardActivity.class));
+                        startActivity(new Intent(RegisterActivity.this, DashBoardUserActivity.class));
                         finish();
 
                     }

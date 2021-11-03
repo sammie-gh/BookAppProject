@@ -8,6 +8,13 @@ public class ModelCategory {
     public ModelCategory() {
     }
 
+    public ModelCategory(String id, String category, String uid, long timestamp) {
+        this.id = id;
+        this.category = category;
+        this.uid = uid;
+        this.timestamp = timestamp;
+    }
+
     public String getId() {
         return id;
     }
