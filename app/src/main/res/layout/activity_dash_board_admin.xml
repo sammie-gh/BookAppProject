@@ -46,16 +46,16 @@
     <EditText
         android:id="@+id/searchEt"
         android:layout_width="match_parent"
-        android:hint="Search"
-        android:drawableStart="@drawable/ic_search_gray"
-        android:textColorHint="@color/gray01"
-        android:padding="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbarRl"/>
+        android:layout_below="@+id/toolbarRl"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/white"
+        android:drawableStart="@drawable/ic_search_gray"
+        android:hint="Search"
+        android:padding="10dp"
+        android:textColorHint="@color/gray01" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoriesRv"
@@ -94,6 +94,8 @@
             android:layout_marginBottom="10dp"
             android:src="@drawable/ic_pdf_add_white"
             android:tint="@color/white"
+            android:backgroundTint="@color/white"
+            android:background="@color/white"
             app:backgroundTint="@color/purple_500"
             app:fabCustomSize="50dp" />
     </LinearLayout>

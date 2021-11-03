@@ -91,7 +91,6 @@ public class PdfAddActivity extends AppCompatActivity {
 
 
     private String title = "", description = "";
-
     private void validateData() {
         //step 1: validate data
         Log.d(TAG, "validateData: validating data...");
@@ -164,7 +163,8 @@ public class PdfAddActivity extends AppCompatActivity {
         hashMap.put("description", "" + description);
         hashMap.put("categoryId", "" + ""+selectedCategoryId);
         hashMap.put("url", "" + uploadPdfUrl);
-        hashMap.put("timestamp", timestamp);
+        hashMap.put("viewsCount", 0);
+        hashMap.put("downloadsCount", 0);
 
         //db book ref
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Books");

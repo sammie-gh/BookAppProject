@@ -42,7 +42,7 @@
             android:layout_toStartOf="@+id/moreBtn"
             android:layout_toEndOf="@id/pdfRl"
             android:maxLines="1"
-            android:text="Book Title" />
+            android:text="" />
 
         <TextView
             android:id="@+id/descriptionTV"
@@ -54,7 +54,7 @@
             android:layout_toEndOf="@id/pdfRl"
             android:ellipsize="none"
             android:maxLines="4"
-            android:text="Book description" />
+            android:text="" />
 
         <TextView
             android:id="@+id/categoryTV"
@@ -64,7 +64,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:maxLines="1"
-            android:text="Category" />
+            android:text="" />
 
         <TextView
             android:id="@+id/sizeTV"
@@ -74,7 +74,7 @@
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@id/pdfRl"
             android:maxLines="1"
-            android:text="13 mb" />
+            android:text=" " />
 
         <TextView
             android:id="@+id/dateTV"
@@ -86,7 +86,7 @@
             android:layout_toEndOf="@id/sizeTV"
             android:gravity="center_horizontal"
             android:maxLines="1"
-            android:text="dd/mm/yyyy"
+            android:text=""
             android:textAlignment="center" />
 
         <ImageButton

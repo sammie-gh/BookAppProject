@@ -99,7 +99,7 @@
             android:drawableStart="@drawable/ic_pdf_gray"
             android:drawablePadding="10dp"
             android:hint="Book description"
-            android:inputType="textPersonName|textCapSentences"
+            android:inputType="textMultiLine|textCapSentences"
             android:padding="10dp"
             android:textColorHint="@color/gray01"
             android:textSize="16sp" />
