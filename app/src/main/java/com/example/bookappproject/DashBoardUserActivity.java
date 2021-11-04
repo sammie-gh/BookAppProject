@@ -40,7 +40,6 @@ public class DashBoardUserActivity extends AppCompatActivity {
         binding = ActivityDashBoardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
 
@@ -52,7 +51,9 @@ public class DashBoardUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 firebaseAuth.signOut();
-                checkUser();
+                startActivity(new Intent(DashBoardUserActivity.this,
+                        MainActivity.class));
+                finish();
             }
         });
 
@@ -101,16 +102,16 @@ public class DashBoardUserActivity extends AppCompatActivity {
                 viewPagerAdapter.notifyDataSetChanged();
 
                 // now load from firebase
-                for (DataSnapshot ds: snapshot.getChildren()){
+                for (DataSnapshot ds : snapshot.getChildren()) {
                     //get data
                     ModelCategory model = ds.getValue(ModelCategory.class);
                     //add data to list
                     categoryArrayList.add(model);
                     //add data to viewpager
                     viewPagerAdapter.addFragments(BooksUserFragment.newInstance(
-                            ""+model.getId(),
-                            ""+model.getCategory(),
-                            ""+model.getUid()),model.getCategory());
+                            "" + model.getId(),
+                            "" + model.getCategory(),
+                            "" + model.getUid()), model.getCategory());
                     //refresh list
                     viewPagerAdapter.notifyDataSetChanged();
 
@@ -167,8 +168,7 @@ public class DashBoardUserActivity extends AppCompatActivity {
     private void checkUser() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
+            binding.subTitleTv.setText("Not Logged In");
         } else {
             String email = firebaseUser.getEmail();
             binding.subTitleTv.setText(email);

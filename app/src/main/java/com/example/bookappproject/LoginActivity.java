@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Enter password ..! ", Toast.LENGTH_SHORT).show();
         } else {
-           loginUserAccount();
+            loginUserAccount();
         }
     }
 
@@ -73,11 +73,11 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Logging In...");
         progressDialog.show();
         //create user in
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+        firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                       checkUser();
+                        checkUser();
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -99,11 +99,11 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         progressDialog.dismiss();
-                        String userType = ""+snapshot.child("userType").getValue();
-                        if (userType.equals("user")){
+                        String userType = "" + snapshot.child("userType").getValue();
+                        if (userType.equals("user")) {
                             startActivity(new Intent(LoginActivity.this, DashBoardUserActivity.class));
                             finish();
-                        }else if(userType.equals("admin")){
+                        } else if (userType.equals("admin")) {
                             startActivity(new Intent(LoginActivity.this, DashBoardAdminActivity.class));
                             finish();
                         }
@@ -115,7 +115,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
-
 
 
     }

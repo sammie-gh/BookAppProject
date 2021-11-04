@@ -16,7 +16,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bookappproject.databinding.ActivityPdfAddBinding;
-import com.example.bookappproject.models.ModelCategory;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -39,11 +38,10 @@ public class PdfAddActivity extends AppCompatActivity {
     private static final String TAG = " ADD_PDF_TAG";
     private static final int PICK_CODE_PDF = 1000;
 
-    private ArrayList<String> categoryTitleArrayList,categoryIdArrayList;
+    private ArrayList<String> categoryTitleArrayList, categoryIdArrayList;
     //url of picked doc
     private Uri pdfUri = null;
     private ProgressDialog progressDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +87,8 @@ public class PdfAddActivity extends AppCompatActivity {
         });
     }
 
-
     private String title = "", description = "";
+
     private void validateData() {
         //step 1: validate data
         Log.d(TAG, "validateData: validating data...");
@@ -132,17 +130,17 @@ public class PdfAddActivity extends AppCompatActivity {
                         Log.d(TAG, "onSuccess: pdf uploaded to storage");
 
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+
                         while (!uriTask.isSuccessful()) ;
                         String uploadPdfUrl = "" + uriTask.getResult();
 
                         //upload to firebase
                         uploadPdfInfoToDatabase(uploadPdfUrl, timestamp);
-
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(PdfAddActivity.this, "pdf upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PdfAddActivity.this, "Pdf upload failed due to " + e.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -161,7 +159,8 @@ public class PdfAddActivity extends AppCompatActivity {
         hashMap.put("id", "" + timestamp);
         hashMap.put("title", "" + title);
         hashMap.put("description", "" + description);
-        hashMap.put("categoryId", "" + ""+selectedCategoryId);
+        hashMap.put("timestamp", timestamp);
+        hashMap.put("categoryId", "" + "" + selectedCategoryId);
         hashMap.put("url", "" + uploadPdfUrl);
         hashMap.put("viewsCount", 0);
         hashMap.put("downloadsCount", 0);
@@ -204,8 +203,8 @@ public class PdfAddActivity extends AppCompatActivity {
                 categoryTitleArrayList.clear(); // clear before adding data
                 categoryIdArrayList.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
-                    String categoryId = ""+ds.child("id").getValue();
-                    String categoryTitle = ""+ds.child("category").getValue();
+                    String categoryId = "" + ds.child("id").getValue();
+                    String categoryTitle = "" + ds.child("category").getValue();
 
                     //add to respective arraylist
                     categoryTitleArrayList.add(categoryTitle);
@@ -222,7 +221,8 @@ public class PdfAddActivity extends AppCompatActivity {
     }
 
     //selected category id and category title
-    private String selectedCategoryId,selectedCategoryTitle;
+    private String selectedCategoryId, selectedCategoryTitle;
+
     private void categoryPickDialog() {
         Log.d(TAG, "categoryPickDialog: showing category pick dialog");
 
@@ -240,11 +240,11 @@ public class PdfAddActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // handle item click
                         // get clicked item from list
-                        selectedCategoryTitle= categoryTitleArrayList.get(which);
-                        selectedCategoryId= categoryIdArrayList.get(which);
+                        selectedCategoryTitle = categoryTitleArrayList.get(which);
+                        selectedCategoryId = categoryIdArrayList.get(which);
                         binding.categoryTv.setText(selectedCategoryTitle);
 
-                        Log.d(TAG, "onClick: Selected Category:" + selectedCategoryId+" "+selectedCategoryTitle);
+                        Log.d(TAG, "onClick: Selected Category:" + selectedCategoryId + " " + selectedCategoryTitle);
 
                     }
                 }).show();

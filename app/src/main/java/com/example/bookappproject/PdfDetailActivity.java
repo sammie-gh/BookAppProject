@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.bookappproject.databinding.ActivityPdfDetailBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +27,9 @@ public class PdfDetailActivity extends AppCompatActivity {
     private static final String TAG_DOWNLOAD = "DOWNLOAD_TAG";
     private ActivityPdfDetailBinding binding;
     String bookId, bookTitle, bookUrl;
+    boolean isInMyFavorite = false;
+    private FirebaseAuth firebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +37,18 @@ public class PdfDetailActivity extends AppCompatActivity {
         binding = ActivityPdfDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
         Intent i = getIntent();
         bookId = i.getStringExtra("bookId");
 
         binding.downloadBookBtn.setVisibility(View.GONE);
 
         loadBookDetails();
+
+        if (firebaseAuth.getCurrentUser() != null) {
+            checkIsFavorite();
+        }
 
         //increment view count whenever this page is starts or open
         MyApplication.incrementBookViewCount(bookId);
@@ -59,6 +69,7 @@ public class PdfDetailActivity extends AppCompatActivity {
             }
         });
 
+
         binding.downloadBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,6 +84,22 @@ public class PdfDetailActivity extends AppCompatActivity {
                     requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
 
+            }
+        });
+
+        binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (firebaseAuth.getCurrentUser() == null) {
+                    Toast.makeText(PdfDetailActivity.this, "You're not logged in", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    if (isInMyFavorite) {
+                        MyApplication.removeFromFavorite(PdfDetailActivity.this, bookId);
+                    } else {
+                        MyApplication.addToFavorite(PdfDetailActivity.this, bookId);
+                    }
+                }
             }
         });
 
@@ -121,7 +148,8 @@ public class PdfDetailActivity extends AppCompatActivity {
                                 "" + bookUrl,
                                 "" + bookTitle,
                                 binding.pdfView,
-                                binding.progressBar
+                                binding.progressBar,
+                                binding.pagesTv
                         );
 
                         MyApplication.loadPdfSize(
@@ -130,13 +158,41 @@ public class PdfDetailActivity extends AppCompatActivity {
                                 binding.sizeTv
                         );
 
+
                         //set data
                         binding.titleTv.setText(bookTitle);
                         binding.descriptionTV.setText(description);
                         binding.viewTv.setText(viewsCount.replace("null", "N/A"));
-//                        binding.downloadTv.setText(viewsCount.replace("null","N/A"));
+                        binding.downloadTv.setText(downloadsCount.replace("null", "N/A"));
                         binding.dateTv.setText(date);
 
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    private void checkIsFavorite() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.keepSynced(true);
+        reference.child(firebaseAuth.getUid()).child("Favorites").child(bookId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        isInMyFavorite = snapshot.exists();
+                        if (isInMyFavorite) {
+                            //exist
+                            binding.favoriteBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_favorite_white, 0, 0);
+                            binding.favoriteBtn.setText("Remove Favorite");
+                        } else {
+
+                            binding.favoriteBtn.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_favorite_border_white, 0, 0);
+                            binding.favoriteBtn.setText("Add Favorite");
+                        }
 
                     }
 
