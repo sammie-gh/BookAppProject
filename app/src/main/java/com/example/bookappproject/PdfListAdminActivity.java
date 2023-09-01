@@ -25,6 +25,7 @@ public class PdfListAdminActivity extends AppCompatActivity {
     private ActivityPdfListAdminBinding binding;
     private ArrayList<ModelPdf> pdfArrayList;
     private AdapterPdfAdmin adapterPdfAdmin;
+
     private String categoryId, categoryTitle;
     private static final String TAG = "PDF_LIST_TAG";
 
@@ -61,6 +62,7 @@ public class PdfListAdminActivity extends AppCompatActivity {
                 }
 
             }
+
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -88,7 +90,7 @@ public class PdfListAdminActivity extends AppCompatActivity {
                             ModelPdf model = ds.getValue(ModelPdf.class);
                             pdfArrayList.add(model);
 
-                            Log.d(TAG, "onDataChange: "+model.getId()+" " + model.getTitle());
+                            Log.d(TAG, "onDataChange: " + model.getId() + " " + model.getTitle());
                         }
 
                         adapterPdfAdmin = new AdapterPdfAdmin(PdfListAdminActivity.this, pdfArrayList);

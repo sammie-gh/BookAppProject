@@ -40,6 +40,7 @@ public class DashBoardUserActivity extends AppCompatActivity {
         binding = ActivityDashBoardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         firebaseAuth = FirebaseAuth.getInstance();
         checkUser();
 
@@ -51,8 +52,7 @@ public class DashBoardUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 firebaseAuth.signOut();
-                startActivity(new Intent(DashBoardUserActivity.this,
-                        MainActivity.class));
+                startActivity(new Intent(DashBoardUserActivity.this, MainActivity.class));
                 finish();
             }
         });

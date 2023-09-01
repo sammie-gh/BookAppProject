@@ -35,7 +35,6 @@ public class PdfViewActivity extends AppCompatActivity {
         binding = ActivityPdfViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
         Intent i = getIntent();
         bookId = i.getStringExtra("bookId");
         loadBookDetails();
@@ -85,7 +84,7 @@ public class PdfViewActivity extends AppCompatActivity {
                                     public void onPageChanged(int page, int pageCount) {
                                         int currentPage = (page + 1); //cox starts from 0
                                         binding.toolbarSubTitleTV.setText(currentPage + "/" + pageCount);
-                                        Log.d(TAG, "onPageChanged: "+currentPage + "/" + pageCount);
+                                        Log.d(TAG, "onPageChanged: " + currentPage + "/" + pageCount);
 
                                     }
                                 }).onError(new OnErrorListener() {
@@ -106,7 +105,7 @@ public class PdfViewActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: "+e.getMessage());
+                Log.d(TAG, "onFailure: " + e.getMessage());
                 binding.progressBar.setVisibility(View.GONE);
             }
         });

@@ -3,13 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Package/BookAppProject/app/src/main/res/drawable/shape_button03.xml" value="0.14629629629629629" />
         <entry key="..\:/Package/BookAppProject/app/src/main/res/drawable/tab_background_selected.xml" value="0.14629629629629629" />
         <entry key="..\:/Package/BookAppProject/app/src/main/res/drawable/tab_selector.xml" value="0.14629629629629629" />
+        <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/activity_category_add.xml" value="0.1037037037037037" />
         <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/activity_dash_board.xml" value="0.22" />
         <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/activity_dash_board_admin.xml" value="0.1" />
+        <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/activity_main.xml" value="0.1037037037037037" />
+        <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/activity_pdf_add.xml" value="0.18" />
         <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/activity_pdf_detail.xml" value="0.18" />
+        <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/activity_pdf_edit.xml" value="0.22" />
+        <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/activity_pdf_list_admin.xml" value="0.2861111111111111" />
         <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/activity_pdf_view.xml" value="0.25" />
         <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/fragment_blook_user.xml" value="0.18" />
+        <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/row_category.xml" value="0.2861111111111111" />
         <entry key="..\:/Package/BookAppProject/app/src/main/res/layout/row_pdf_user.xml" value="0.18" />
         <entry key="..\:/Users/Priest/AndroidStudioProjects/BookAppProject/app/src/main/res/drawable/ic_pdf_add_white.xml" value="0.35104166666666664" />
         <entry key="..\:/Users/Priest/AndroidStudioProjects/BookAppProject/app/src/main/res/drawable/sahpe_button03.xml" value="0.103125" />
